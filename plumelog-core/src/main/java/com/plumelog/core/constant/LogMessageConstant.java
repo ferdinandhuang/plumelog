@@ -34,6 +34,21 @@ public class LogMessageConstant {
 
     public final static String LOG_KEY_COMPRESS = "plume_log_list_compress";
 
+
+    public final static String LOG_EXCHANGE = "plume_log_exchange";
+    public final static String LOG_DEAD_EXCHANGE = "plume_log_dead_exchange";
+    public final static String LOG_ROUT_KEY = "plume_log_routing_key";
+    public final static String LOG_QUEUE = "plume_log_queue";
+
+    public static final String MQ_CACHE_RETRY_TIME_KEY = "MQ_RETRY_TIME";
+    /** 缓存消息要发送的EXCHANGE*/
+    public static final String MQ_CACHE_RETRY_EXCHANGE = "MQ_RETRY_EXCHANGE";
+    /** 缓存消息要发送的ROOTKEY*/
+    public static final String MQ_CACHE_RETRY_ROOTKEY = "MQ_RETRY_ROOTKEY";
+
+    public static final String MQ_PROPS_HEADER_COMSUME_RETRY_KEY = "mq_comsume_retrys";
+    public static final int MQ_PROPS_HEADER_COMSUME_RETRIES = 3;
+    public static final String MQ_PROPS_HEADER_TRACKING_ID = "trackingId";
     /**
      * 链路日志存入ES的索引后缀
      */
