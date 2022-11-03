@@ -34,10 +34,19 @@
     <springProperty scope="context" name="plumelog.masterName" source="plumelog.masterName"/>
     <springProperty scope="context" name="plumelog.env" source="spring.profiles.active"/>
 
-    <appender name="plumelog" class="com.plumelog.lite.logback.appender.LiteAppender">
+<!--    <appender name="plumelog" class="com.plumelog.lite.logback.appender.LiteAppender">-->
+<!--        <appName>plumelog</appName>-->
+<!--        <logPath>/Users/chenlongfei/lucene</logPath>-->
+<!--        <keepDay>30</keepDay>-->
+<!--    </appender>-->
+
+    <appender name="plumelog" class="com.plumelog.logback.appender.RabbitMQAppender">
         <appName>plumelog</appName>
-        <logPath>/Users/chenlongfei/lucene</logPath>
-        <keepDay>30</keepDay>
+        <mqHost>192.168.100.12</mqHost>
+        <mqPort>5672</mqPort>
+        <mqUser>backend-user</mqUser>
+        <mqPwd>backend-user</mqPwd>
+
     </appender>
 
 <!--    <appender name="plumelog" class="com.plumelog.logback.appender.RedisAppender">-->

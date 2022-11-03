@@ -19,10 +19,11 @@ public class RabbitMQClient extends AbstractClient {
     private ConnectionFactory connectionFactory;
 
     private Channel channel;
+    private Channel traceChannel;
 
 
     public RabbitMQClient(String host, int port, String userName, String password) {
-        try{
+        try {
             connectionFactory = new ConnectionFactory();
             connectionFactory.setHost(host);
             connectionFactory.setPort(port);
@@ -30,7 +31,37 @@ public class RabbitMQClient extends AbstractClient {
             connectionFactory.setPassword(password);
             connectionFactory.setVirtualHost("/");
 
-        } catch (Exception e){
+            //由连接工厂创建连接
+            Connection connection = connectionFactory.newConnection();
+            //通过连接创建信道
+            channel = connection.createChannel();
+
+            //通过信道声明一个exchange，若已存在则直接使用，不存在会自动创建
+            //参数：name、type、是否支持持久化、此交换机没有绑定一个queue时是否自动删除、是否只在rabbitmq内部使用此交换机、此交换机的其它参数（map）
+            channel.exchangeDeclare(LogMessageConstant.LOG_EXCHANGE, "topic", true, false, false, null);
+
+            //通过信道声明一个queue，如果此队列已存在，则直接使用；如果不存在，会自动创建
+            //参数：name、是否支持持久化、是否是排它的、是否支持自动删除、其他参数（map）
+            channel.queueDeclare(LogMessageConstant.LOG_KEY, true, false, false, null);
+
+            //将queue绑定至某个exchange。一个exchange可以绑定多个queue
+            channel.queueBind(LogMessageConstant.LOG_KEY, LogMessageConstant.LOG_EXCHANGE, LogMessageConstant.LOG_ROUT_KEY);
+
+            //通过连接创建信道
+            traceChannel = connection.createChannel();
+
+            //通过信道声明一个exchange，若已存在则直接使用，不存在会自动创建
+            //参数：name、type、是否支持持久化、此交换机没有绑定一个queue时是否自动删除、是否只在rabbitmq内部使用此交换机、此交换机的其它参数（map）
+            traceChannel.exchangeDeclare(LogMessageConstant.LOG_EXCHANGE, "topic", true, false, false, null);
+
+            //通过信道声明一个queue，如果此队列已存在，则直接使用；如果不存在，会自动创建
+            //参数：name、是否支持持久化、是否是排它的、是否支持自动删除、其他参数（map）
+            traceChannel.queueDeclare(LogMessageConstant.LOG_KEY_TRACE, true, false, false, null);
+
+            //将queue绑定至某个exchange。一个exchange可以绑定多个queue
+            traceChannel.queueBind(LogMessageConstant.LOG_KEY_TRACE, LogMessageConstant.LOG_EXCHANGE, LogMessageConstant.LOG_ROUT_KEY);
+
+        } catch (Exception e) {
             System.out.println("rabbitmq连接失败");
             System.out.println(e);
         }
@@ -52,7 +83,7 @@ public class RabbitMQClient extends AbstractClient {
     @Override
     public void pushMessage(String key, String strings) throws LogQueueConnectException {
         try {
-            send(strings, LogMessageConstant.LOG_DEAD_EXCHANGE, LogMessageConstant.LOG_ROUT_KEY);
+            send(strings, key, LogMessageConstant.LOG_DEAD_EXCHANGE, LogMessageConstant.LOG_ROUT_KEY);
         } catch (Exception e) {
             throw new LogQueueConnectException("MQ 写入失败！", e);
         } finally {
@@ -66,7 +97,7 @@ public class RabbitMQClient extends AbstractClient {
         try {
             list.forEach(str -> {
                 try {
-                    send(str, LogMessageConstant.LOG_DEAD_EXCHANGE, LogMessageConstant.LOG_ROUT_KEY);
+                    send(str, key, LogMessageConstant.LOG_DEAD_EXCHANGE, LogMessageConstant.LOG_ROUT_KEY);
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
@@ -79,31 +110,28 @@ public class RabbitMQClient extends AbstractClient {
     }
 
 
-    private void send(String content, String exchangeName, String rootKey) throws Exception {
+    private void send(String content, String key, String exchangeName, String rootKey) throws Exception {
         String correlationId = generateCorrelationId();
 
-        //由连接工厂创建连接
-        Connection connection = connectionFactory.newConnection();
-        //通过连接创建信道
-        channel = connection.createChannel();
+        if(key.equals(LogMessageConstant.LOG_KEY)){
+            //发送message
+            channel.basicPublish(LogMessageConstant.LOG_EXCHANGE, LogMessageConstant.LOG_ROUT_KEY, null, content.getBytes());
+        }else if(key.equals(LogMessageConstant.LOG_KEY_TRACE)){
+            //发送message
+            traceChannel.basicPublish(LogMessageConstant.LOG_EXCHANGE, LogMessageConstant.LOG_ROUT_KEY, null, content.getBytes());
+        }
+    }
 
-        //通过信道声明一个exchange，若已存在则直接使用，不存在会自动创建
-        //参数：name、type、是否支持持久化、此交换机没有绑定一个queue时是否自动删除、是否只在rabbitmq内部使用此交换机、此交换机的其它参数（map）
-        channel.exchangeDeclare(LogMessageConstant.LOG_EXCHANGE, "topic", true, false, false, null);
+    public Channel getChannel() {
+        return channel;
+    }
 
-        //通过信道声明一个queue，如果此队列已存在，则直接使用；如果不存在，会自动创建
-        //参数：name、是否支持持久化、是否是排它的、是否支持自动删除、其他参数（map）
-        channel.queueDeclare(LogMessageConstant.LOG_QUEUE, true, false, false, null);
-
-        //将queue绑定至某个exchange。一个exchange可以绑定多个queue
-        channel.queueBind(LogMessageConstant.LOG_QUEUE, LogMessageConstant.LOG_EXCHANGE, LogMessageConstant.LOG_ROUT_KEY);
-
-        //发送message
-        channel.basicPublish(LogMessageConstant.LOG_EXCHANGE, LogMessageConstant.LOG_ROUT_KEY, null, content.getBytes());
+    public Channel getTraceChannel() {
+        return traceChannel;
     }
 
     private static String generateCorrelationId() {
-        Date date =new Date();
+        Date date = new Date();
         long time = date.getTime();
         return UUID.randomUUID().toString().replaceAll("-", "") + time;
     }

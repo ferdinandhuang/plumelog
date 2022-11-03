@@ -4,6 +4,7 @@ package com.plumelog.server;
 public class InitConfig {
     public final static String KAFKA_MODE_NAME = "kafka";
     public final static String REDIS_MODE_NAME = "redis";
+    public final static String RABBITMQ_MODE_NAME = "rabbitmq";
     public final static String REST_MODE_NAME = "rest";
     public final static String LITE_MODE_NAME = "lite";
     public static String LITE_MODE_LOG_PATH = ".";
@@ -23,6 +24,10 @@ public class InitConfig {
     public static String ES_REFRESH_INTERVAL = "10s";
     public static String ES_INDEX_MODEL = "day";
     public static String ES_INDEX_ZONE_ID = "GMT+8";
+    public static String reabbitMQHost = "";
+    public static Integer reabbitMQPort = 0;
+    public static String reabbitMQUserName = "";
+    public static String reabbitMQPassword = "";
     public static String restUserName = "";
     public static String restPassWord = "";
     public static String restUrl = "";

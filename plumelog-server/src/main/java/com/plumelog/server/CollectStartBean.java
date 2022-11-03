@@ -4,11 +4,9 @@ import com.plumelog.core.client.AbstractClient;
 import com.plumelog.core.constant.LogMessageConstant;
 import com.plumelog.core.client.AbstractServerClient;
 import com.plumelog.core.lucene.LuceneClient;
+import com.plumelog.core.rabbit.RabbitMQClient;
 import com.plumelog.server.client.ElasticLowerClient;
-import com.plumelog.server.collect.KafkaLogCollect;
-import com.plumelog.server.collect.LocalLogCollect;
-import com.plumelog.server.collect.RedisLogCollect;
-import com.plumelog.server.collect.RestLogCollect;
+import com.plumelog.server.collect.*;
 import com.plumelog.server.monitor.RedisMsgPubSubListener;
 import com.plumelog.server.util.IndexUtil;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
@@ -49,6 +47,9 @@ public class CollectStartBean implements InitializingBean {
     private AbstractClient redisClient;
 
     @Autowired(required = false)
+    private RabbitMQClient rabbitMQClient;
+
+    @Autowired(required = false)
     private KafkaConsumer kafkaConsumer;
 
     @Autowired
@@ -86,6 +87,11 @@ public class CollectStartBean implements InitializingBean {
             RedisLogCollect redisLogCollect = new RedisLogCollect((ElasticLowerClient) abstractServerClient, redisQueueClient,
                     applicationEventPublisher, compressor, redisClient);
             redisLogCollect.redisStart();
+        }
+        if (InitConfig.RABBITMQ_MODE_NAME.equals(InitConfig.START_MODEL)) {
+            RabbitMQLogCollect rabbitMQLogCollect = new RabbitMQLogCollect((ElasticLowerClient) abstractServerClient, rabbitMQClient,
+                    applicationEventPublisher, redisClient);
+            rabbitMQLogCollect.rabbitmqStart();
         }
         if (InitConfig.REST_MODE_NAME.equals(InitConfig.START_MODEL)) {
             RestLogCollect restLogCollect = new RestLogCollect((ElasticLowerClient) abstractServerClient, applicationEventPublisher);

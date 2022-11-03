@@ -111,28 +111,12 @@ public class RabbitMQAppender extends AppenderBase<ILoggingEvent> {
         this.maxCount = maxCount;
     }
 
-    public int getLogQueueSize() {
-        return logQueueSize;
-    }
-
-    public void setLogQueueSize(int logQueueSize) {
-        this.logQueueSize = logQueueSize;
-    }
-
     public boolean isCompressor() {
         return compressor;
     }
 
     public void setCompressor(boolean compressor) {
         this.compressor = compressor;
-    }
-
-    public String getMasterName() {
-        return masterName;
-    }
-
-    public void setMasterName(String masterName) {
-        this.masterName = masterName;
     }
 
     @Override

@@ -38,7 +38,7 @@ public class LogMessageConstant {
     public final static String LOG_EXCHANGE = "plume_log_exchange";
     public final static String LOG_DEAD_EXCHANGE = "plume_log_dead_exchange";
     public final static String LOG_ROUT_KEY = "plume_log_routing_key";
-    public final static String LOG_QUEUE = "plume_log_queue";
+//    public final static String LOG_QUEUE = "plume_log_queue";
 
     public static final String MQ_CACHE_RETRY_TIME_KEY = "MQ_RETRY_TIME";
     /** 缓存消息要发送的EXCHANGE*/

@@ -5,6 +5,7 @@ import com.plumelog.core.client.AbstractServerClient;
 import com.plumelog.core.constant.LogMessageConstant;
 import com.plumelog.core.kafka.KafkaConsumerClient;
 import com.plumelog.core.lucene.LuceneClient;
+import com.plumelog.core.rabbit.RabbitMQClient;
 import com.plumelog.core.redis.RedisClient;
 import com.plumelog.core.redis.RedisClusterClient;
 import com.plumelog.core.redis.RedisSentinelClient;
@@ -88,6 +89,15 @@ public class ClientConfig implements InitializingBean {
     @Value("${plumelog.es.indexType.zoneId:GMT+8}")
     private String indexTypeZoneId;
 
+    @Value("${plumelog.rabbitmq.host:}")
+    private String rabbitMQHosts;
+    @Value("${plumelog.rabbitmq.port:}")
+    private Integer rabbitMQPort;
+    @Value("${plumelog.rabbitmq.username:}")
+    private String rabbitMQUsername;
+    @Value("${plumelog.rabbitmq.password:}")
+    private String rabbitMQPwd;
+
 
     @Value("${plumelog.redis.redisHost:}")
     private String redisHost;
@@ -130,6 +140,14 @@ public class ClientConfig implements InitializingBean {
 
     @Value("${plumelog.inside.redis.host:}")
     private String insideRedis;
+
+    @Bean(name = "rabbitMQClient")
+    public RabbitMQClient initRabbitMQClient(){
+        if (InitConfig.LITE_MODE_NAME.equals(this.model)) {
+            return null;
+        }
+        return new RabbitMQClient(rabbitMQHosts, rabbitMQPort, rabbitMQUsername, rabbitMQPwd);
+    }
 
     @Bean(name = "redisClient")
     public AbstractClient initRedisClient() {
