@@ -5,13 +5,13 @@
     <groupId>com.plumelog</groupId>
     <artifactId>plumelog</artifactId>
     <packaging>pom</packaging>
-    <version>3.5.3</version>
+    <version>3.5.3-pwc</version>
     <name>plumelog</name>
     <description>The parent project of plumelog</description>
     <url>https://gitee.com/frankchenlong/plumelog</url>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <distribution.repository.url>http://172.16.249.94:4000</distribution.repository.url>
+        <distribution.repository.url>http://192.168.100.3:38081</distribution.repository.url>
         <redis.version>3.3.0</redis.version>
         <kafka.version>2.5.0</kafka.version>
         <springboot.version>2.1.7.RELEASE</springboot.version>
@@ -62,12 +62,14 @@
     </dependencyManagement>
      <distributionManagement>
          <repository>
-             <id>releases</id>
-             <url>${distribution.repository.url}/content/repositories/releases</url>
+             <id>my-releases</id>
+             <name>My releases</name>
+             <url>${distribution.repository.url}/repository/maven-releases/</url>
          </repository>
          <snapshotRepository>
-             <id>snapshots</id>
-             <url>${distribution.repository.url}/content/repositories/snapshots</url>
+             <id>my-snapshots</id>
+             <name>My snapshots</name>
+             <url>${distribution.repository.url}/repository/maven-snapshots/</url>
          </snapshotRepository>
      </distributionManagement>
     <!--<licenses>

@@ -42,8 +42,8 @@
 
     <appender name="plumelog" class="com.plumelog.logback.appender.RabbitMQAppender">
         <appName>plumelog</appName>
-        <mqHost>192.168.100.12</mqHost>
-        <mqPort>5672</mqPort>
+        <mqHost>192.168.100.42</mqHost>
+        <mqPort>30672</mqPort>
         <mqUser>backend-user</mqUser>
         <mqPwd>backend-user</mqPwd>
 
