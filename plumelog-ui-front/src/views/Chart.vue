@@ -131,7 +131,7 @@ export default {
           "dataCount": {
             "date_histogram": {
               "field": "dtTime",
-              "interval": this.chartInterval.value,
+              "fixed_interval": this.chartInterval.value+"ms",
               "min_doc_count": 0
             }
           }
@@ -161,7 +161,7 @@ export default {
         "dataCount":{
           "date_histogram": {
             "field": "dtTime",
-            "interval": this.chartInterval.value,
+            "fixed_interval": this.chartInterval.value+"ms",
             "min_doc_count": 0
           }
         }

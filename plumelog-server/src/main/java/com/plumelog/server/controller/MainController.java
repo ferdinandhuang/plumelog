@@ -161,10 +161,16 @@ public class MainController {
     public Set<String> queryAppNames(@RequestBody String queryStr) {
 
         // 查询过去n天的索引
-        String[] indexs = new String[InitConfig.keepDays];
-        for (int i = 0; i < InitConfig.keepDays; i++) {
-            indexs[i] = IndexUtil.getRunLogIndex(
-                    System.currentTimeMillis() - i * InitConfig.MILLS_ONE_DAY) + "*";
+        String[] indexs = null;
+        if (InitConfig.keepDays==0){
+            indexs = new String[1];
+            indexs[0] = LogMessageConstant.ES_INDEX + LogMessageConstant.LOG_TYPE_RUN+"*";
+        }else {
+            indexs = new String[InitConfig.keepDays];
+            for (int i = 0; i < InitConfig.keepDays; i++) {
+                indexs[i] = IndexUtil.getRunLogIndex(
+                        System.currentTimeMillis() - i * InitConfig.MILLS_ONE_DAY) + "*";
+            }
         }
 
         // 检查ES索引是否存在

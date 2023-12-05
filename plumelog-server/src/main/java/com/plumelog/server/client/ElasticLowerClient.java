@@ -353,7 +353,7 @@ public class ElasticLowerClient extends AbstractServerClient {
         int size = list.size();
         for (int a = 0; a < size; a++) {
             String map = list.get(a);
-            String ent = "{\"index\":{} ";
+            String ent = "{\"index\":{} }";
             sendStr.append(ent);
             sendStr.append("\r\n");
             sendStr.append(map);
@@ -400,7 +400,7 @@ public class ElasticLowerClient extends AbstractServerClient {
         int size = list.size();
         for (int a = 0; a < size; a++) {
             String map = list.get(a);
-            String ent = "{\"index\":{} ";
+            String ent = "{\"index\":{} }";
             sendStr.append(ent);
             sendStr.append("\r\n");
             sendStr.append(map);

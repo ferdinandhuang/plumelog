@@ -21,11 +21,12 @@ application-test-confidential.properties
 *.iml
 # Windows shortcuts
 *.lnk
-/.idea
+/.idea/
 /log
 /logs
 # =========================
 # Operating System Files
 # =========================
 target/
-node_modules/
+./plumelog-ui-front/node_modules/
+/plumelog-ui-front/.idea/
