@@ -5,13 +5,13 @@
     <groupId>com.plumelog</groupId>
     <artifactId>plumelog</artifactId>
     <packaging>pom</packaging>
-    <version>3.5.3-pwc-1.0</version>
+    <version>3.5.3-pwc-1.1</version>
     <name>plumelog</name>
     <description>The parent project of plumelog</description>
     <url>https://gitee.com/frankchenlong/plumelog</url>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <distribution.repository.url>http://192.168.100.3:38081</distribution.repository.url>
+        <distribution.repository.url>http://home.danggui.fun:38081</distribution.repository.url>
         <redis.version>3.3.0</redis.version>
         <kafka.version>2.5.0</kafka.version>
         <springboot.version>2.1.7.RELEASE</springboot.version>
